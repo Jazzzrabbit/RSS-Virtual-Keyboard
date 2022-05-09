@@ -8,6 +8,14 @@ const keyList = ['Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 
 const keyCodeRu = ['Ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ', '\\', 'Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э', '/', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', '.'];
 const exceptions = ['Backspace', 'Tab', 'Delete', 'CapsLock', 'Enter', 'Shift', 'ArrowUp', 'Control', 'Meta', 'Space', ' ', 'Alt', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'Control'];
 const bigButtons = ['MetaLeft', 'ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Backspace', 'Tab', 'Enter', 'Delete', 'CapsLock', 'ShiftLeft', 'ShiftRight', 'ControlLeft', 'ControlRight', 'AltLeft', 'AltRight', 'Shift', 'Alt', 'Meta', 'Control'];
+const ruLetters = {
+  KeyQ: 'й', KeyW: 'ц', KeyE: 'у', KeyR: 'к', KeyT: 'е', KeyY: 'н', KeyU: 'г', KeyI: 'ш', KeyO: 'щ', KeyP: 'з', KeyA: 'ф', KeyS: 'ы', KeyD: 'в', KeyF: 'а', KeyG: 'п', KeyH: 'р', KeyJ: 'о', KeyK: 'л', KeyL: 'д', KeyZ: 'я', KeyX: 'ч', KeyC: 'с', KeyV: 'м', KeyB: 'и', KeyN: 'т', KeyM: 'ь', BracketLeft: 'х', BracketRight: 'ъ', Semicolon: 'ж', Quote: 'э', Comma: 'б', Period: 'ю', Slash: '.', Backslash: '\\', IntlBackslash: '/', Backquote: 'ё', Digit1: '1', Digit2: '2', Digit3: '3', Digit4: '4', Digit5: '5', Digit6: '6', Digit7: '7', Digit8: '8', Digit9: '9', Digit0: '0', Minus: '-', Equal: '=', Space: ' ',
+};
+const enLetters = {
+  й: 'q', ц: 'w', у: 'e', к: 'r', е: 't', н: 'y', г: 'u', ш: 'i', щ: 'o', з: 'p', ф: 'a', ы: 's', в: 'd', а: 'f', п: 'g', р: 'h', о: 'j', л: 'k', д: 'l', я: 'z', ч: 'x', с: 'c', м: 'v', и: 'b', т: 'n', ь: 'm', х: '[', ъ: ']', ж: ';', э: "'", б: ',', ю: '.', '.': '.', '\\': '\\', '/': '/', ё: '`', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 0: '0', '-': '-', '=': '=', ' ': ' ',
+};
+const help = 'ёйцукенгшщзхъфывапролджэячсмитьбю'.split('');
+const helpEn = 'qwertyuiopasdfghjklzxcvbnm'.split('');
 
 const main = document.createElement('main');
 const container = document.createElement('div');
@@ -334,7 +342,7 @@ function printTextEn(x) {
     if (x === '/') ta.value = output('?');
     if (!spec.includes(x)) ta.value = output(x.toUpperCase());
     specSymbolsRender();
-  } else if (capsOn) ta.value = output(x.toUpperCase());
+  } else if (capsOn && helpEn.includes(x)) ta.value = output(x.toUpperCase());
   else ta.value = output(x);
   shiftOn = false;
 }
@@ -358,7 +366,7 @@ function printTextRu(x) {
     if (x === '\\') ta.value = output('|');
     if (!spec.includes(x)) ta.value = output(x.toUpperCase());
     specSymbolsRender();
-  } else if (capsOn) ta.value = output(x.toUpperCase());
+  } else if (capsOn && help.includes(x)) ta.value = output(x.toUpperCase());
   else ta.value = output(x);
   shiftOn = false;
 }
@@ -369,10 +377,12 @@ window.addEventListener('keydown', (event) => {
     if (event.key.length === 1) {
       if (getLang() === 'en') {
         event.preventDefault();
-        printTextEn(event.key);
+        if (keysRu.includes(event.key.toUpperCase())) {
+          printTextEn(enLetters[event.key.toLowerCase()]);
+        } else printTextEn(event.key);
       } else {
         event.preventDefault();
-        printTextRu(event.key);
+        printTextRu(ruLetters[event.code]);
       }
     }
   }
